@@ -1,16 +1,20 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = {
-  total: 'total',
-  headers: {
-    Accept: 'application/vnd.api+json; charset=utf-8',
-    'Content-Type': 'application/vnd.api+json; charset=utf-8'
+  total: "total",
+  pagination: {
+    page: "page[number]",
+    perPage: "page[size]"
   },
-  updateMethod: 'PATCH',
-  arrayFormat: 'brackets',
+  headers: {
+    Accept: "application/vnd.api+json; charset=utf-8",
+    "Content-Type": "application/vnd.api+json; charset=utf-8"
+  },
+  updateMethod: "PATCH",
+  arrayFormat: "brackets",
   serializerOpts: {},
   deserializerOpts: {}
 };
