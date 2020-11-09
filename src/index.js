@@ -127,7 +127,6 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
 
       options.method = settings.updateMethod;
       options.data = new Serializer(resource, getSerializerOpts()).serialize(data);
-      console.log(options.data);
       if (
         options.data
         && options.data.data

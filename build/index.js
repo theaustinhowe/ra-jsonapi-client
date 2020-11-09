@@ -154,7 +154,6 @@ exports.default = function (apiUrl) {
 
           options.method = settings.updateMethod;
           options.data = new _jsonapiSerializer.Serializer(resource, getSerializerOpts()).serialize(data);
-          console.log(options.data);
           if (options.data && options.data.data && options.data.data.attributes && 'id' in options.data.data.attributes) {
             delete options.data.data.attributes.id;
           }
