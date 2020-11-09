@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6,27 +6,27 @@ Object.defineProperty(exports, "__esModule", {
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-var _qs = require("qs");
+var _qs = require('qs');
 
-var _deepmerge = require("deepmerge");
+var _deepmerge = require('deepmerge');
 
 var _deepmerge2 = _interopRequireDefault(_deepmerge);
 
-var _axios = require("axios");
+var _axios = require('axios');
 
 var _axios2 = _interopRequireDefault(_axios);
 
-var _jsonapiSerializer = require("jsonapi-serializer");
+var _jsonapiSerializer = require('jsonapi-serializer');
 
-var _actions = require("./actions");
+var _actions = require('./actions');
 
-var _defaultSettings = require("./default-settings");
+var _defaultSettings = require('./default-settings');
 
 var _defaultSettings2 = _interopRequireDefault(_defaultSettings);
 
-var _errors = require("./errors");
+var _errors = require('./errors');
 
-var _initializer = require("./initializer");
+var _initializer = require('./initializer');
 
 var _initializer2 = _interopRequireDefault(_initializer);
 
@@ -39,7 +39,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 /** This proxy ensures that every relationship is serialized to an object of the form {id: x}, even
  * if that relationship doesn't have included data
  */
-var specialOpts = ["transform", "keyForAttribute", "id", "typeAsAttribute", "links"];
+var specialOpts = ['transform', 'keyForAttribute', 'id', 'typeAsAttribute', 'links'];
 var relationshipProxyHandler = {
   has: function has(target, key) {
     // Pretend to have all keys except certain ones with special meanings
@@ -88,7 +88,7 @@ var relationshipProxyHandler = {
 exports.default = function (apiUrl) {
   var userSettings = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
   return function (type, resource, params) {
-    var url = "";
+    var url = '';
     var settings = (0, _deepmerge2.default)(_defaultSettings2.default, userSettings);
 
     var options = {
@@ -101,7 +101,7 @@ exports.default = function (apiUrl) {
       // By default, assume the user wants to serialize all keys except links, in case that's
       // a leftover from a deserialized resource
       var attributes = new Set(Object.keys(params.data));
-      attributes.delete("links");
+      attributes.delete('links');
 
       return Object.assign({
         attributes: [].concat(_toConsumableArray(attributes))
@@ -123,52 +123,57 @@ exports.default = function (apiUrl) {
 
           // Add all filter params to query.
           Object.keys(params.filter || {}).forEach(function (key) {
-            query["filter[" + key + "]"] = params.filter[key];
+            query['filter[' + key + ']'] = params.filter[key];
           });
 
           // Add sort parameter
           if (params.sort && params.sort.field) {
-            var prefix = params.sort.order === "ASC" ? "" : "-";
-            query.sort = "" + prefix + params.sort.field;
+            var prefix = params.sort.order === 'ASC' ? '' : '-';
+            query.sort = '' + prefix + params.sort.field;
           }
 
-          url = apiUrl + "/" + resource + "?" + (0, _qs.stringify)(query);
+          url = apiUrl + '/' + resource + '?' + (0, _qs.stringify)(query);
           break;
         }
 
       case _actions.GET_ONE:
-        url = apiUrl + "/" + resource + "/" + params.id;
+        url = apiUrl + '/' + resource + '/' + params.id;
         break;
 
       case _actions.CREATE:
-        url = apiUrl + "/" + resource;
-        options.method = "POST";
+        url = apiUrl + '/' + resource;
+        options.method = 'POST';
         options.data = new _jsonapiSerializer.Serializer(resource, getSerializerOpts()).serialize(params.data);
         break;
 
       case _actions.UPDATE:
         {
-          url = apiUrl + "/" + resource + "/" + params.id;
+          url = apiUrl + '/' + resource + '/' + params.id;
 
           var data = Object.assign({ id: params.id }, params.data);
 
           options.method = settings.updateMethod;
           options.data = new _jsonapiSerializer.Serializer(resource, getSerializerOpts()).serialize(data);
+          console.log(options.data);
+          if (options.data && options.data.data && options.data.data.attributes && 'id' in options.data.data.attributes) {
+            delete options.data.data.attributes.id;
+          }
+
           break;
         }
 
       case _actions.DELETE:
-        url = apiUrl + "/" + resource + "/" + params.id;
-        options.method = "DELETE";
+        url = apiUrl + '/' + resource + '/' + params.id;
+        options.method = 'DELETE';
         break;
 
       case _actions.GET_MANY:
         {
           var _query2 = (0, _qs.stringify)({
-            "filter[id]": params.ids
+            'filter[id]': params.ids
           }, { arrayFormat: settings.arrayFormat });
 
-          url = apiUrl + "/" + resource + "?" + _query2;
+          url = apiUrl + '/' + resource + '?' + _query2;
           break;
         }
 
@@ -186,18 +191,18 @@ exports.default = function (apiUrl) {
 
           // Add all filter params to query.
           Object.keys(params.filter || {}).forEach(function (key) {
-            _query3["filter[" + key + "]"] = params.filter[key];
+            _query3['filter[' + key + ']'] = params.filter[key];
           });
 
           // Add the reference id to the filter params.
-          _query3["filter[" + params.target + "]"] = params.id;
+          _query3['filter[' + params.target + ']'] = params.id;
 
-          url = apiUrl + "/" + resource + "?" + (0, _qs.stringify)(_query3);
+          url = apiUrl + '/' + resource + '?' + (0, _qs.stringify)(_query3);
           break;
         }
 
       default:
-        throw new _errors.NotImplementedError("Unsupported Data Provider request type " + type);
+        throw new _errors.NotImplementedError('Unsupported Data Provider request type ' + type);
     }
 
     return (0, _axios2.default)(_extends({ url: url }, options)).then(function (response) {
@@ -236,7 +241,7 @@ exports.default = function (apiUrl) {
           }
 
         default:
-          throw new _errors.NotImplementedError("Unsupported Data Provider request type " + type);
+          throw new _errors.NotImplementedError('Unsupported Data Provider request type ' + type);
       }
     });
   };

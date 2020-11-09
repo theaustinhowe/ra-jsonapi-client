@@ -127,7 +127,13 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
 
       options.method = settings.updateMethod;
       options.data = new Serializer(resource, getSerializerOpts()).serialize(data);
-      if (options.data.data.attributes && 'id' in options.data.data.attributes) {
+      console.log(options.data);
+      if (
+        options.data
+        && options.data.data
+        && options.data.data.attributes
+        && 'id' in options.data.data.attributes
+      ) {
         delete options.data.data.attributes.id;
       }
 
