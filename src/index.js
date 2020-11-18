@@ -67,6 +67,7 @@ export default (apiUrl, userSettings = {}) => (type, resource, params) => {
 
   const options = {
     headers: settings.headers,
+    withCredentials: true,
   };
 
   function getSerializerOpts() {
