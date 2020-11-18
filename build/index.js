@@ -92,7 +92,8 @@ exports.default = function (apiUrl) {
     var settings = (0, _deepmerge2.default)(_defaultSettings2.default, userSettings);
 
     var options = {
-      headers: settings.headers
+      headers: settings.headers,
+      withCredentials: true
     };
 
     function getSerializerOpts() {
